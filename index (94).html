@@ -1,0 +1,277 @@
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تقييم لجان طواف الشارقة الدولي للدراجات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <div class="container mx-auto p-4">
+        <header class="text-center mb-8">
+            <img alt="شعار طواف الشارقة الدولي للدراجات" class="mx-auto mb-4" height="100" src="https://sharjahtour.ae/wp-content/uploads/2021/12/TLogoW.png" width="200"/>
+            <h1 class="text-4xl font-bold text-blue-600">تقييم لجان طواف الشارقة الدولي للدراجات</h1>
+        </header>
+
+        <div class="bg-white p-6 rounded-lg shadow-xl transition-transform transform hover:scale-105">
+            <form id="evaluationForm">
+                <div class="mb-4">
+                    <label for="committeeName" class="block text-lg font-medium mb-2">اسم اللجنة</label>
+                    <select id="committeeName" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">اختر اسم اللجنة</option>
+                        <option value="اللجنة الفنية والحكام">اللجنة الفنية والحكام</option>
+                        <option value="لجنة الخدمات المساندة">لجنة الخدمات المساندة</option>
+                        <option value="لجنة العلاقات العامة والمواصلات">لجنة العلاقات العامة والمواصلات</option>
+                        <option value="لجنة الإعلام والتسويق">لجنة الإعلام والتسويق</option>
+                        <option value="اللجنة الطبية">اللجنة الطبية</option>
+                        <option value="لجنة المراسم والتشريفات">لجنة المراسم والتشريفات</option>
+                        <option value="لجنة الفعاليات المصاحبة">لجنة الفعاليات المصاحبة</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="criteria1" class="block text-lg font-medium mb-2">معيار 1: التنظيم</label>
+                    <input type="number" id="criteria1" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" min="0" max="5" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="criteria2" class="block text-lg font-medium mb-2">معيار 2: التعاون</label>
+                    <input type="number" id="criteria2" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" min="0" max="5" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="criteria3" class="block text-lg font-medium mb-2">معيار 3: الدقة</label>
+                    <input type="number" id="criteria3" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" min="0" max="5" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="criteria4" class="block text-lg font-medium mb-2">معيار 4: الالتزام</label>
+                    <input type="number" id="criteria4" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" min="0" max="5" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="criteria5" class="block text-lg font-medium mb-2">معيار 5: التواصل</label>
+                    <input type="number" id="criteria5" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" min="0" max="5" required>
+                </div>
+
+                <div class="mb-4">
+                    <label for="comments" class="block text-lg font-medium mb-2">ملاحظات</label>
+                    <textarea id="comments" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                </div>
+
+                <div class="flex justify-between">
+                    <button type="button" onclick="saveToLocal()" class="bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors hover:bg-blue-600">حفظ محلي</button>
+                    <button type="button" onclick="exportToExcel()" class="bg-green-500 text-white px-4 py-2 rounded-lg transition-colors hover:bg-green-600">تصدير إلى Excel</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">التقييمات المحفوظة</h2>
+            <div id="savedEvaluations" class="bg-white p-6 rounded-lg shadow-lg">
+                <!-- سيتم عرض التقييمات المحفوظة هنا -->
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">لوحة التحكم</h2>
+            <div id="dashboard" class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-bold mb-2">معدل تقييم اللجان</h3>
+                <table class="min-w-full bg-white border border-gray-300">
+                    <thead>
+                        <tr>
+                            <th class="border px-4 py-2">اسم اللجنة</th>
+                            <th class="border px-4 py-2">معدل التقييم</th>
+                            <th class="border px-4 py-2">حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardBody">
+                        <!-- سيتم ملء البيانات هنا -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">الرسم البياني</h2>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function saveToLocal() {
+            const committeeName = document.getElementById('committeeName').value;
+            const criteria1 = document.getElementById('criteria1').value;
+            const criteria2 = document.getElementById('criteria2').value;
+            const criteria3 = document.getElementById('criteria3').value;
+            const criteria4 = document.getElementById('criteria4').value;
+            const criteria5 = document.getElementById('criteria5').value;
+            const comments = document.getElementById('comments').value;
+
+            if (!committeeName) {
+                alert('يرجى اختيار اسم اللجنة.');
+                return;
+            }
+
+            const evaluation = {
+                committeeName,
+                criteria1,
+                criteria2,
+                criteria3,
+                criteria4,
+                criteria5,
+                comments
+            };
+
+            let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            evaluations.push(evaluation);
+            localStorage.setItem('evaluations', JSON.stringify(evaluations));
+
+            displaySavedEvaluations();
+            updateDashboard();
+            updateRadarChart();
+        }
+
+        function displaySavedEvaluations() {
+            const evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            const savedEvaluationsDiv = document.getElementById('savedEvaluations');
+            savedEvaluationsDiv.innerHTML = '';
+
+            evaluations.forEach((evaluation, index) => {
+                const evaluationDiv = document.createElement('div');
+                evaluationDiv.classList.add('mb-4', 'p-4', 'border', 'border-gray-300', 'rounded-lg', 'shadow', 'transition-transform', 'transform', 'hover:scale-105');
+                evaluationDiv.innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">اسم اللجنة: ${evaluation.committeeName}</h3>
+                    <p class="mb-2">معيار 1: التنظيم: ${evaluation.criteria1}</p>
+                    <p class="mb-2">معيار 2: التعاون: ${evaluation.criteria2}</p>
+                    <p class="mb-2">معيار 3: الدقة: ${evaluation.criteria3}</p>
+                    <p class="mb-2">معيار 4: الالتزام: ${evaluation.criteria4}</p>
+                    <p class="mb-2">معيار 5: التواصل: ${evaluation.criteria5}</p>
+                    <p>ملاحظات: ${evaluation.comments}</p>
+                    <button onclick="deleteEvaluation(${index})" class="bg-red-500 text-white px-4 py-2 rounded-lg transition-colors hover:bg-red-600">حذف</button>
+                `;
+                savedEvaluationsDiv.appendChild(evaluationDiv);
+            });
+        }
+
+        function deleteEvaluation(index) {
+            let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            evaluations.splice(index, 1);
+            localStorage.setItem('evaluations', JSON.stringify(evaluations));
+            displaySavedEvaluations();
+            updateDashboard();
+            updateRadarChart();
+        }
+
+        function updateDashboard() {
+            const evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            const dashboardBody = document.getElementById('dashboardBody');
+            dashboardBody.innerHTML = '';
+
+            const committeeScores = {};
+
+            evaluations.forEach(evaluation => {
+                if (!committeeScores[evaluation.committeeName]) {
+                    committeeScores[evaluation.committeeName] = {
+                        totalScore: 0,
+                        count: 0
+                    };
+                }
+                const totalCriteriaScore = (parseFloat(evaluation.criteria1) + parseFloat(evaluation.criteria2) + parseFloat(evaluation.criteria3) + parseFloat(evaluation.criteria4) + parseFloat(evaluation.criteria5)) / 5;
+                committeeScores[evaluation.committeeName].totalScore += totalCriteriaScore;
+                committeeScores[evaluation.committeeName].count += 1;
+            });
+
+            for (const committee in committeeScores) {
+                const averageScore = ((committeeScores[committee].totalScore / committeeScores[committee].count) * 20).toFixed(2) + '%';
+                const row = document.createElement('tr');
+                row.innerHTML = `<td class="border px-4 py-2">${committee}</td><td class="border px-4 py-2">${averageScore}</td><td class="border px-4 py-2"><button onclick="deleteEvaluationByName('${committee}')" class="bg-red-500 text-white px-4 py-2 rounded-lg transition-colors hover:bg-red-600">حذف</button></td>`;
+                dashboardBody.appendChild(row);
+            }
+        }
+
+        function deleteEvaluationByName(committeeName) {
+            let evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            evaluations = evaluations.filter(evaluation => evaluation.committeeName !== committeeName);
+            localStorage.setItem('evaluations', JSON.stringify(evaluations));
+            displaySavedEvaluations();
+            updateDashboard();
+            updateRadarChart();
+        }
+
+        function exportToExcel() {
+            const evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            let csvContent = "data:text/csv;charset=utf-8,اسم اللجنة,معيار 1: التنظيم,معيار 2: التعاون,معيار 3: الدقة,معيار 4: الالتزام,معيار 5: التواصل,ملاحظات\n";
+
+            evaluations.forEach(evaluation => {
+                const row = `${evaluation.committeeName},${evaluation.criteria1},${evaluation.criteria2},${evaluation.criteria3},${evaluation.criteria4},${evaluation.criteria5},${evaluation.comments}`;
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "evaluations.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function updateRadarChart() {
+            const evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+            const committeeNames = [...new Set(evaluations.map(evaluation => evaluation.committeeName))];
+            const criteriaLabels = ['التنظيم', 'التعاون', 'الدقة', 'الالتزام', 'التواصل'];
+            const datasets = committeeNames.map(committeeName => {
+                const committeeEvaluations = evaluations.filter(evaluation => evaluation.committeeName === committeeName);
+                const averageScores = criteriaLabels.map((_, index) => {
+                    const totalScore = committeeEvaluations.reduce((sum, evaluation) => sum + parseFloat(evaluation[`criteria${index + 1}`]), 0);
+                    return (totalScore / committeeEvaluations.length).toFixed(2);
+                });
+                return {
+                    label: committeeName,
+                    data: averageScores,
+                    fill: true,
+                    backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.2)`,
+                    borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
+                    pointBackgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`
+                };
+            });
+
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: criteriaLabels,
+                    datasets: datasets
+                },
+                options: {
+                    scale: {
+                        ticks: {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displaySavedEvaluations();
+            updateDashboard();
+            updateRadarChart();
+        });
+    </script>
+</body>
+</html>
